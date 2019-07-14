@@ -5,6 +5,7 @@
 
 const reqwest = require("reqwest");
 const fs = require('fs');
+require('./test.js')
 
 function timestamp(date) {
     return date ? Math.floor(new Date(date).getTime()/1000) : Math.floor(new Date().getTime()/1000);
@@ -25,33 +26,6 @@ function getTimestampList(timestampUnit, numberPerStep, startTime, endTime){
     var timestampEnd = endTime ? timestamp(endTime) : timestamp();
     var reqNum = Math.floor((timestampEnd - timestampStart) / timestampStep);
     return Array(reqNum).fill().map((v,i)=>(timestampStart + i * timestampStep));
-}
-
-function checkIfContinous(checkedList, indexOfData, timestampUnit){
-    // TODO
-    // var len = checkedList.length - 1;
-    // var inx = indexOfData;
-    // return timestampUnit * len == checkedList[len].inx - checkedList[0].inx;
-    return true;
-}
-
-function combineList(resultList, tempList, indexOfData){
-    // TODO
-    // if (!checkIfContinous(tempList, indexOfData)){
-    //     console.log("Error combine list, data got uncontinous.");
-        
-    //     result = [];
-    // };
-
-    // TODO
-    result = resultList.concat(tempList);
-    
-    // TODO
-    // if (!checkIfContinous(result, indexOfData)){
-    //     console.log("Error combine list, data combined uncontinous.");
-    //     result = [];
-    // }
-    return result;
 }
 
 // json-server --watch db.json
@@ -76,15 +50,14 @@ async function main(){
     const indexOfData = 'time';
     // local DB json output path
     const outputPath = './db.json';
-
     // get delta timestamp per step
     var timestampUnit = getTimestampUnit(reqTimeType);
     // Get the data, check and combine to list
     var timestampList = getTimestampList(timestampUnit, numberPerStep, startTime);
 
+    // Request
     var resultList = []
     for (var [index, timestamp] of timestampList.entries()){
-        // request
         await reqwest({
             url:'https://min-api.cryptocompare.com/data/' + reqTimeType,
             type:'json',
@@ -97,16 +70,23 @@ async function main(){
             },
             success:function(resp) {
                 usedDataList = resp.Data;
-                resultList = combineList(resultList, usedDataList, indexOfData);
-                if (resultList) console.log("Got " + (index + 1).toString() + "/" + timestampList.length.toString());
+                resultList = resultList.concat(usedDataList);
+                console.log("Got " + (index + 1).toString() + "/" + timestampList.length.toString());
             },
             error:function(err){
                 err ? console.log("Error getting data from min-api. " + err.toString()) : null;
             }
         });
     }
-    // Write to DB json file
-    resultList ? writeListToFile(outputPath, resultList) : null;
+
+    // Remove duplicate data
+    resultList = resultList.makeUniq(JSON.stringify);
+    // Check if continous by index
+    resultList.isDense(indexOfData, timestampUnit) ? null : console.log("Warning, result data not dense.");
+    // Sort by index
+    resultList.sortBy(indexOfData);
+    // Write to the output json file
+    writeListToFile(outputPath, resultList);
 }
 
 main();
