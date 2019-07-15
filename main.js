@@ -45,15 +45,17 @@ async function main(){
     // limit number per request
     const numberPerStep = 2000;
     // request start time
-    const startTime = '2019/01/01';
+    const startTime = '2019/04/01';
+    // request end time
+    const endTime = '2019/07/01';
     // list index of data
     const indexOfData = 'time';
     // local DB json output path
-    const outputPath = './db.json';
+    const outputPath = './dbtest.json';
     // get delta timestamp per step
     var timestampUnit = getTimestampUnit(reqTimeType);
     // Get the data, check and combine to list
-    var timestampList = getTimestampList(timestampUnit, numberPerStep, startTime);
+    var timestampList = getTimestampList(timestampUnit, numberPerStep, startTime, endTime);
 
     // Request
     var resultList = []
