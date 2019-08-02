@@ -2,7 +2,7 @@
 
 Keywords: Bitcoin, Digital Currency, Trade Data, Local, Node, Javascript, Cryptocompare.
 
-A tools to do the following things.
+A tool to do the following things.
 
 1.Check the trade data from [cryptocompare.com](https://min-api.cryptocompare.com).
 
@@ -14,8 +14,8 @@ A tools to do the following things.
 
 - Step
 ```shell
-git clone https://github.com/ibarapascal/DigitalCurrencyHistoricalDataS3.git
-cd DigitalCurrencyHistoricalDataS3
+git clone https://github.com/ibarapascal/digital-currency-historical-data-s3.git
+cd digital-currency-historical-data-s3
 node main.js
 npm install -g json-server
 json-server --watch {db.json} -> name of chosen json file
