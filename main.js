@@ -41,17 +41,21 @@ async function main(){
     // request trade pair
     const reqPair = ['BTC', 'USD'];
     // request type of days, hours, minutes
-    const reqTimeType = 'histohour';
+    const reqTimeType = 'histominute';
     // limit number per request
     const numberPerStep = 2000;
     // request start time
-    const startTime = '2019/04/01';
+    const startTime = '2019/08/01';
     // request end time
-    const endTime = '2019/07/01';
+    const endTime = '2019/08/05';
     // list index of data
     const indexOfData = 'time';
     // local DB json output path
-    const outputPath = './dbtest.json';
+    const outputPath = './data/'
+        + reqPair[0] + reqPair[1] + '-'
+        + reqTimeType + '-'
+        + startTime.replace(/[^0-9\.]+/g,'') + '-'
+        + endTime.replace(/[^0-9\.]+/g,'') + '.json';
     // get delta timestamp per step
     var timestampUnit = getTimestampUnit(reqTimeType);
     // Get the data, check and combine to list
