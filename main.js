@@ -45,9 +45,9 @@ async function main(){
     // limit number per request
     const numberPerStep = 2000;
     // request start time
-    const startTime = '2019/08/01';
+    const startTime = '2020/03/11';
     // request end time
-    const endTime = '2019/08/05';
+    const endTime = '2020/03/15';
     // list index of data
     const indexOfData = 'time';
     // local DB json output path
